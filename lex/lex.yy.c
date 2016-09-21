@@ -728,7 +728,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 10 "count_char.l"
+#line 8 "count_char.l"
 ECHO;
 	YY_BREAK
 #line 735 "lex.yy.c"
@@ -1725,7 +1725,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 10 "count_char.l"
+#line 8 "count_char.l"
+
 
 
 main() {

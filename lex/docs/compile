@@ -5,4 +5,4 @@ $ lex count_chars.l
 $ sudo yum -y install flex-devel
 
 # ccで実行ファイルにする
-$ cc count_chars.l -o exe -lyl
+$ cc lex.yy.c -o exe -ll
