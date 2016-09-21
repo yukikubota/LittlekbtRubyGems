@@ -1,0 +1,8 @@
+# lexでコンパイル
+$ lex count_chars.l
+
+# 必要なライブラリのインストール
+$ sudo yum -y install flex-devel
+
+# ccで実行ファイルにする
+$ cc count_chars.l -o exe -lyl
