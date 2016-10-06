@@ -35,4 +35,7 @@ class Schedule
     @time   = time
     @seats  = Seats.new(seats)
   end
+
+  def to_json
+  end
 end

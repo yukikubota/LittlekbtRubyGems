@@ -22,6 +22,9 @@ class YourNameFinder
     private
     def select_date
     end
+
+    def format_seats
+    end
   end
 end
 

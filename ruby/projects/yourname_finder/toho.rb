@@ -1,9 +1,3 @@
-require 'capybara/poltergeist'
-require 'nokogiri'
-require 'time'
-require './your_name_finder'
-require './schedule'
-
 class Toho < YourNameFinder::Base
   def set_schedules
     select_date
@@ -15,8 +9,8 @@ class Toho < YourNameFinder::Base
     @schedules = schedule
                    .css('.schedule-item.white')
                    .map do |white_schedule|
-                     start = Time.parse("#{@date} #{white_schedule.css('a > .time > .start')[0].children.text}")
-                     if Time.parse("#{@date} #{@time[0]}") < start && start < Time.parse("#{@date} #{@time[1]}")
+                     start = Chronic.parse("#{@date} #{white_schedule.css('a > .time > .start')[0].children.text}")
+                     if Chronic.parse("#{@date} #{@time[0]}") < start && start < Chronic.parse("#{@date} #{@time[1]}")
                        @session.execute_script white_schedule.children[0].attributes['href'].value
                        sleep 3
 
@@ -35,7 +29,7 @@ class Toho < YourNameFinder::Base
                                  end.select do |tr|
                                    tr.size >= 1
                                  end
-                       Schedule.new(:toho, @date, start, format_seats(seats))
+                       		 Schedule.new(:toho, @date, start, format_seats(seats))
                      end
                    end.select{|s| s}
   end
@@ -44,7 +38,7 @@ class Toho < YourNameFinder::Base
 
   def select_date
     @session.visit "https://hlo.tohotheater.jp/net/schedule/076/TNPI2000J01.do"
-    @session.execute_script "$('##{@date}').trigger('click')"
+    @session.execute_script "$('##{@date.delete('-')}').trigger('click')"
     sleep 5
   end
 

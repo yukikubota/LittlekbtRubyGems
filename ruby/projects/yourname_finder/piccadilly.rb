@@ -1,10 +1,3 @@
-require 'capybara/poltergeist'
-require 'nokogiri'
-require 'time'
-require 'pry'
-require './your_name_finder'
-require './schedule'
-
 class Piccadilly < YourNameFinder::Base
   def set_schedules
     select_date
@@ -17,8 +10,8 @@ class Piccadilly < YourNameFinder::Base
               s.children.children.children.children.children[0] &&
               s.children.children.children.children.children[0].attributes["alt"].value != '販売終了'
             end.map do |white_schedule|
-              start = Time.parse("#{@date} #{white_schedule.css('>table>tbody>tr>td>.strong.fontXL').children.text}")
-              if Time.parse("#{@date} #{@time[0]}") < start && start < Time.parse("#{@date} #{@time[1]}")
+              start = Chronic.parse("#{@date} #{white_schedule.css('>table>tbody>tr>td>.strong.fontXL').children.text}")
+              if Chronic.parse("#{@date} #{@time[0]}") < start && start < Chronic.parse("#{@date} #{@time[1]}")
                 [start,  white_schedule.attributes['onclick'].value.match(/window.open\(\'(.*?)\'/)[1]]
               end
             end.select{|s| s}
@@ -38,7 +31,8 @@ class Piccadilly < YourNameFinder::Base
 
   def select_date
     @session.visit "http://www.smt-cinema.com/site/shinjuku/"
-    @session.execute_script "$('#s0100_1051_#{@date}').click()"
+    @session.execute_script "$('#s0100_1051_#{@date.delete('-')}').click()"
+    sleep 3
   end
 
   def format_seats(seats)
@@ -51,5 +45,3 @@ class Piccadilly < YourNameFinder::Base
     hash
   end
 end
-
-Piccadilly.new('20161006', ['18:00', '22:00']).set_schedules
