@@ -35,7 +35,7 @@ class Toho < YourNameFinder::Base
                                  end.select do |tr|
                                    tr.size >= 1
                                  end
-                       Schedule.new(:toho, @date, start, seats)
+                       Schedule.new(:toho, @date, start, format_seats(seats))
                      end
                    end.select{|s| s}
   end
@@ -46,5 +46,18 @@ class Toho < YourNameFinder::Base
     @session.visit "https://hlo.tohotheater.jp/net/schedule/076/TNPI2000J01.do"
     @session.execute_script "$('##{@date}').trigger('click')"
     sleep 5
+  end
+
+  def format_seats(seats)
+    hash = {}
+    seats.each do |row|
+      row.each do |seat|
+        seat = seat.split()[0].split('-')
+        seat_char = seat[0]
+        hash[seat_char] = [] unless hash.key?(seat_char)
+        hash[seat_char] = hash[seat_char] << seat[1]
+      end
+    end
+    hash
   end
 end
